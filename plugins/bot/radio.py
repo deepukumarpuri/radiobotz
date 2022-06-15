@@ -19,7 +19,7 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>
 import asyncio
 from config import Config, STREAM
 from pyrogram.types import Message
-from utils import mp, RADIO, USERNAME
+from utils import mp, RADIO, USERNAME, DK_CHAT_ID
 from pyrogram import Client, filters, emoji
 
 ADMINS=Config.ADMINS
