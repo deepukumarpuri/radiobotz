@@ -58,7 +58,9 @@ from user import USER
 
 ADMINS=Config.ADMINS
 STREAM_URL=Config.STREAM_URL
+DK_STREAM_URL=os.environ.get("DK_STREAM_URL", "")
 CHAT_ID=Config.CHAT_ID
+DK_CHAT_ID==os.environ.get("DK_CHAT_ID", "")
 ADMIN_LIST = {}
 CALL_STATUS = {}
 FFMPEG_PROCESSES = {}
@@ -233,7 +235,87 @@ class MusicPlayer(object):
                 await sleep(10)
                 continue
 
+    async def dkg_start_radio(self):
+        group_call = self.group_call
+        if group_call.is_connected:
+            playlist.clear()   
+        process = FFMPEG_PROCESSES.get(DK_CHAT_ID)
+        if process:
+            try:
+                process.send_signal(SIGINT)
+            except subprocess.TimeoutExpired:
+                process.kill()
+            except Exception as e:
+                print(e)
+                pass
+            FFMPEG_PROCESSES[DK_CHAT_ID] = ""
+        station_stream_url = DK_STREAM_URL
+        try:
+            RADIO.remove(0)
+        except:
+            pass
+        try:
+            RADIO.add(1)
+        except:
+            pass
+        if os.path.exists(f'radio-{DK_CHAT_ID}.raw'):
+            os.remove(f'radio-{CHAT_ID}.raw')
+        # credits: https://t.me/c/1480232458/6825
+        os.mkfifo(f'radio-{CHAT_ID}.raw')
+        group_call.input_filename = f'radio-{DK_CHAT_ID}.raw'
+        if not group_call.is_connected:
+            await self.start_call()
+        ffmpeg_log = open("ffmpeg.log", "w+")
+        command=["ffmpeg", "-y", "-i", station_stream_url, "-f", "s16le", "-ac", "2",
+        "-ar", "48000", "-acodec", "pcm_s16le", group_call.input_filename]
 
+
+        process = await asyncio.create_subprocess_exec(
+            *command,
+            stdout=ffmpeg_log,
+            stderr=asyncio.subprocess.STDOUT,
+            )
+
+
+        FFMPEG_PROCESSES[DK_CHAT_ID] = process
+        if RADIO_TITLE:
+            await self.edit_title()
+        await sleep(2)
+        while True:
+            if group_call.is_connected:
+                print("Succesfully Joined VC !")
+                break
+            else:
+                print("Connecting, Please Wait ...")
+                await self.start_call()
+                await sleep(10)
+                continue
+                
+    async def dk_stop_radio(self):
+        group_call = self.group_call
+        if group_call:
+            playlist.clear()   
+            group_call.input_filename = ''
+            try:
+                RADIO.remove(1)
+            except:
+                pass
+            try:
+                RADIO.add(0)
+            except:
+                pass
+        process = FFMPEG_PROCESSES.get(DK_CHAT_ID)
+        if process:
+            try:
+                process.send_signal(SIGINT)
+            except subprocess.TimeoutExpired:
+                process.kill()
+            except Exception as e:
+                print(e)
+                pass
+            FFMPEG_PROCESSES[DK_CHAT_ID] = ""
+
+                
     async def stop_radio(self):
         group_call = self.group_call
         if group_call:
@@ -247,7 +329,7 @@ class MusicPlayer(object):
                 RADIO.add(0)
             except:
                 pass
-        process = FFMPEG_PROCESSES.get(CHAT_ID)
+        process = FFMPEG_PROCESSES.get(DK_CHAT_ID)
         if process:
             try:
                 process.send_signal(SIGINT)
