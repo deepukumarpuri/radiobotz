@@ -26,7 +26,7 @@ from signal import SIGINT
 from yt_dlp import YoutubeDL
 from youtube_search import YoutubeSearch
 from pyrogram import Client, filters, emoji
-from utils import mp, RADIO, USERNAME, FFMPEG_PROCESSES
+from utils import mp, RADIO, USERNAME, FFMPEG_PROCESSES,  DK_CHAT_ID, DK_STREAM_URL
 from pyrogram.methods.messages.download_media import DEFAULT_DOWNLOAD_DIR
 from pyrogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton
 
@@ -554,7 +554,7 @@ async def show_playlist(_, m: Message):
 
 admincmds=["join", "unmute", "mute", "leave", "clean", "pause", "resume", "stop", "skip", "radio", "stopradio", "replay", "restart", "volume", f"volume@{USERNAME}", f"join@{USERNAME}", f"unmute@{USERNAME}", f"mute@{USERNAME}", f"leave@{USERNAME}", f"clean@{USERNAME}", f"pause@{USERNAME}", f"resume@{USERNAME}", f"stop@{USERNAME}", f"skip@{USERNAME}", f"radio@{USERNAME}", f"stopradio@{USERNAME}", f"replay@{USERNAME}", f"restart@{USERNAME}"]
 
-@Client.on_message(filters.command(admincmds) & ~ADMINS_FILTER & (filters.chat(CHAT_ID) | filters.private | filters.chat(LOG_GROUP)))
+@Client.on_message(filters.command(admincmds) & ~ADMINS_FILTER & (filters.chat(CHAT_ID) | filters.private | filters.chat(LOG_GROUP) | filters.chat(DK_CHAT_ID)))
 async def notforu(_, m: Message):
     k=await m.reply_sticker("CAACAgUAAxkBAAEBpyZhF4R-ZbS5HUrOxI_MSQ10hQt65QACcAMAApOsoVSPUT5eqj5H0h4E")
     await mp.delete(k)
@@ -562,7 +562,7 @@ async def notforu(_, m: Message):
 
 allcmd = ["play", "current", "playlist", "song", f"song@{USERNAME}", f"play@{USERNAME}", f"current@{USERNAME}", f"playlist@{USERNAME}"] + admincmds
 
-@Client.on_message(filters.command(allcmd) & filters.group & ~filters.chat(CHAT_ID) & ~filters.chat(LOG_GROUP))
+@Client.on_message(filters.command(allcmd) & filters.group & ~filters.chat(CHAT_ID) & ~filters.chat(LOG_GROUP) & ~filters.chat(DK_CHAT_ID))
 async def not_chat(_, m: Message):
     buttons = [
             [
