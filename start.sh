@@ -1,7 +1,7 @@
-echo "Cloning Repo, Please Wait..."
-git clone https://github.com/Sjsjssjsjsjsjsj/radiov3 /radiov3
-echo "Installing Requirements..."
-cd /radiov3
-pip3 install -U -r requirements.txt
-echo "Starting Bot, Please Wait..."
+echo "
+||| Radio Bot |||
+Copyright (c) 2022-23 DKBOTZ
+--> Join @DKBOTZ
+--> Follow Github.com/DKBOTZHELP on Github
+"
 python3 main.py
