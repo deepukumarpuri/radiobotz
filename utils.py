@@ -60,7 +60,7 @@ ADMINS=Config.ADMINS
 STREAM_URL=Config.STREAM_URL
 DK_STREAM_URL=os.environ.get("DK_STREAM_URL", "")
 CHAT_ID=Config.CHAT_ID
-DK_CHAT_ID==os.environ.get("DK_CHAT_ID", "")
+DK_CHAT_ID=os.environ.get("DK_CHAT_ID", "")
 ADMIN_LIST = {}
 CALL_STATUS = {}
 FFMPEG_PROCESSES = {}
