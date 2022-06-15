@@ -63,17 +63,4 @@ async def stop(_, message: Message):
     await mp.delete(k)
     await mp.delete(message)
 
-@Client.on_message(filters.command(["radios", f"radios@{USERNAME}"]) & ADMINS_FILTER & (filters.chat(DK_CHAT_ID) | filters.private | filters.chat(LOG_GROUP)))
-async def radio(_, message: Message):
-    await mp.dk_start_radio()
-    k=await message.reply_text(f"{emoji.CHECK_MARK_BUTTON} **Radio Stream Started :** \n<code>{STREAM}</code>")
-    await mp.delete(k)
-    await mp.delete(message)
 
-
-@Client.on_message(filters.command(["stopradios", f"stopradios@{USERNAME}"]) & ADMINS_FILTER & (filters.chat(DK_CHAT_ID) | filters.private | filters.chat(LOG_GROUP)))
-async def stop(_, message: Message):
-    await mp.dk_stop_radio()
-    k=await message.reply_text(f"{emoji.CROSS_MARK_BUTTON} **Radio Stream Ended Successfully!**")
-    await mp.delete(k)
-    await mp.delete(message)
